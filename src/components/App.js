@@ -1,41 +1,20 @@
-import React, { useState } from "react";
-import Question from "./Question";
-import quiz from "../data/quiz";
+import React from 'react'
 
-function App() {
-  const [questions, setQuestions] = useState(quiz);
-  const [currentQuestionId, setCurrentQuestion] = useState(1);
-  const [score, setScore] = useState(0);
-  const currentQuestion = questions.find((q) => q.id === currentQuestionId);
+export default function App() 
+const [dogPic, setDogPic] = useState(null);
 
-  function handleQuestionAnswered(correct) {
-    if (currentQuestionId < questions.length) {
-      setCurrentQuestion((currentQuestionId) => currentQuestionId + 1);
-    } else {
-      setCurrentQuestion(null);
-    }
-    if (correct) {
-      setScore((score) => score + 1);
-    }
-  }
+useEffect(() => {
+  fetch("https://dog.ceo/api/breeds/image/random")
+    .then((response) => response.json())
+    .then((data) => {
+      setDogPic(data.message);
+    });
+}, []);
+// use an empty dependencies array, so we only run the fetch request ONCE
 
-  return (
-    <main>
-      <section>
-        {currentQuestion ? (
-          <Question
-            question={currentQuestion}
-            onAnswered={handleQuestionAnswered}
-          />
-        ) : (
-          <>
-            <h1>Game Over</h1>
-            <h2>Total Correct: {score}</h2>
-          </>
-        )}
-      </section>
-    </main>
-  );
-}
+if (!dogPic) return <p>Loading...</p>;
 
-export default App;
+return <img src={dogPic} alt="A Random Dog" />;
+
+
+
